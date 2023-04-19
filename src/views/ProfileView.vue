@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <div>This is profile view</div>
+  <div class="profile">
     <ProfileSettingsComponent />
   </div>
 </template>
@@ -15,3 +14,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.profile {
+  width: 50%;
+}
+</style>
