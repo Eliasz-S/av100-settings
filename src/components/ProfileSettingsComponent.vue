@@ -93,6 +93,7 @@
               </b-col>
             </b-row>
           </b-form-group>
+          <!-- В данном случае скорее заготовка кнопки, пока не отправляющая данных на сервер, так как на странице settings она также не отправляет никаких данных -->
           <save-button-component :onClick="applyAllChanges">
             Сохранить
           </save-button-component>
@@ -120,8 +121,8 @@ export default {
   },
   data() {
     return {
-      show: false,
-      selected: null,
+      show: false, // v-model алерта об успешном сохранении данных
+      selected: null, // v-model радио кнопок выбора метода оповещения пользователя
       data: {
         email: "",
       },
@@ -155,7 +156,7 @@ export default {
       }
     }, // метод для изменения способа оповещения пользователя
     applyAllChanges() {
-      this.show = "5";
+      this.show = "5"; // алерт исчезает через 5 секунд
     },
   },
 };
