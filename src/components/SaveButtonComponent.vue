@@ -1,7 +1,7 @@
 <template>
-  <b-button variant="success" class="save-button my-3" @click="clickSave"
-    >Сохранить</b-button
-  >
+  <b-button variant="success" class="save-button my-3" @click="clickSave">
+    Сохранить
+  </b-button>
 </template>
 
 <script>

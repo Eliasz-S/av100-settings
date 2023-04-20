@@ -1,5 +1,5 @@
 import { http } from "@/utils/axios";
-import { loginData } from "@/utils/constants";
+import { loginData } from "@/utils/constants"; // установленные статически данные пользователя для авторизации
 
 export default {
   namespaced: true,
@@ -7,6 +7,7 @@ export default {
     return {
       userToken: null,
       userData: null,
+      userID: null,
     };
   },
   getters: {
@@ -16,6 +17,9 @@ export default {
     userData(state) {
       return state.userData;
     },
+    userID(state) {
+      return state.userID;
+    },
   },
   mutations: {
     setToken(state, payload) {
@@ -24,17 +28,23 @@ export default {
     setUserData(state, payload) {
       state.userData = payload;
     },
+    setUserID(state, payload) {
+      state.userID = payload;
+    },
   },
   actions: {
-    login({ commit, dispatch }) {
+    login({ commit, dispatch, state }) {
       http.post("login", loginData).then((response) => {
         commit("setToken", response.data.token);
-        dispatch("fetchUser");
+        commit("setUserID", response.data.user.id);
+        if (state.userToken && state.userID) {
+          dispatch("fetchUser");
+        }
       });
     },
     async fetchUser({ commit, state }) {
       try {
-        const response = await http.get("user", {
+        const response = await http.get(`user/${state.userID}`, {
           headers: {
             "X-User-Token": state.userToken,
           },
@@ -45,6 +55,17 @@ export default {
       } catch (e) {
         console.error("Ошибка при получении данных пользователя", e);
       }
+    },
+    updateUser({ state }, dataToUpdate) {
+      http.put(
+        `user/${state.userID}`,
+        Object.assign(state.userData, dataToUpdate),
+        {
+          headers: {
+            "X-User-Token": state.userToken,
+          },
+        }
+      );
     },
   },
 };

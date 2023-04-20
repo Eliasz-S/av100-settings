@@ -12,7 +12,7 @@
               <label for="company">Компания</label>
             </b-col>
             <b-col sm="7">
-              <b-form-input id="company" :value="userData.companyname" />
+              <b-form-input id="company" :value="userData?.companyname" />
             </b-col>
           </b-row>
           <b-row class="row mb-3">
@@ -20,7 +20,7 @@
               <label for="login">Логин</label>
             </b-col>
             <b-col sm="7">
-              <b-form-input id="login" :value="userData.login" />
+              <b-form-input id="login" :value="userData?.login" />
             </b-col>
           </b-row>
           <b-row class="row mb-3">
@@ -28,7 +28,7 @@
               <label for="phone-number">Номер телефона</label>
             </b-col>
             <b-col sm="7">
-              <b-form-input id="phone-number" :value="userData.phone" />
+              <b-form-input id="phone-number" :value="userData?.phone" />
             </b-col>
           </b-row>
           <b-row class="row mb-3">
@@ -36,7 +36,7 @@
               <label for="name">Имя</label>
             </b-col>
             <b-col sm="7">
-              <b-form-input id="name" :value="userData.fname" />
+              <b-form-input id="name" :value="userData?.fname" />
             </b-col>
           </b-row>
           <b-row class="row mb-3">
@@ -44,7 +44,7 @@
               <label for="surname">Фамилия</label>
             </b-col>
             <b-col sm="7">
-              <b-form-input id="surname" :value="userData.lname" />
+              <b-form-input id="surname" :value="userData?.lname" />
               <b-form-text>* Не обязательно</b-form-text>
             </b-col>
           </b-row>
@@ -66,9 +66,10 @@
             <b-form-radio
               v-model="selected"
               :aria-describedby="ariaDescribedby"
-              name="some-radios"
-              value="A"
+              name="off"
+              value="off"
               class="py-3 border-bottom"
+              @change="changeNotificationMethod"
             >
               &nbsp; Выкл
             </b-form-radio>
@@ -77,14 +78,15 @@
                 <b-form-radio
                   v-model="selected"
                   :aria-describedby="ariaDescribedby"
-                  name="some-radios"
-                  value="B"
+                  name="email"
+                  value="Email"
+                  @change="changeNotificationMethod"
                 >
                   &nbsp; Email
                 </b-form-radio>
               </b-col>
               <b-col cols="5">
-                <b-form-input @input="emailInput" :value="userData?.email" />
+                <b-form-input @input="emailInput" v-model="data.email" />
               </b-col>
             </b-row>
           </b-form-group>
@@ -97,7 +99,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import SaveButtonComponent from "./SaveButtonComponent.vue";
 
 export default {
@@ -105,16 +107,47 @@ export default {
   components: {
     SaveButtonComponent,
   },
+  updated() {
+    this.fetchData();
+  },
   computed: {
     ...mapGetters("user", ["userData"]),
   },
   data() {
     return {
-      selected: "",
+      selected: null,
+      data: {
+        email: "",
+      },
     };
   },
   methods: {
-    emailInput() {},
+    ...mapActions("user", ["updateUser"]),
+    emailInput() {
+      this.updateUser(this.data);
+    }, // метод для изменения email пользователя
+    fetchData() {
+      this.selected = this.userData.notifytypestring;
+      this.data.email = this.userData.email;
+    }, // метод для отображения актуальных данных после перезагрузки страницы
+    changeNotificationMethod() {
+      switch (this.selected) {
+        case "off":
+          this.updateUser({
+            sendMethod: "-1",
+            notifytype: "-1",
+            notifytypestring: "off",
+          });
+          break;
+        case "Email":
+          this.updateUser({
+            sendMethod: "2",
+            notifytype: "2",
+            notifytypestring: "Email",
+          });
+          break;
+      }
+    }, // метод для изменения способа оповещения пользователя
   },
 };
 </script>
