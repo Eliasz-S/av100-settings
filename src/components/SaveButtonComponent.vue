@@ -1,17 +1,19 @@
 <template>
-  <b-button variant="success" class="save-button my-3" @click="clickSave">
-    Сохранить
+  <b-button variant="success" class="save-button my-3" @click="onClick">
+    <slot />
   </b-button>
 </template>
 
 <script>
 export default {
-  name: "SaveButtonComponent",
-  methods: {
-    clickSave() {
-      console.log("click");
+  props: {
+    onClick: {
+      type: Function,
+      required: true,
     },
   },
+  name: "SaveButtonComponent",
+  methods: {},
 };
 </script>
 

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <b-alert v-model="show" class="custom-alert" variant="success" fade>
+      Сохранено.
+    </b-alert>
     <b-container>
       <!-- Блок с данными пользователя -->
       <b-row class="row my-5 mx-0">
@@ -85,12 +88,14 @@
                   &nbsp; Email
                 </b-form-radio>
               </b-col>
-              <b-col cols="5">
+              <b-col cols="7">
                 <b-form-input @input="emailInput" v-model="data.email" />
               </b-col>
             </b-row>
           </b-form-group>
-          <SaveButtonComponent />
+          <save-button-component :onClick="applyAllChanges">
+            Сохранить
+          </save-button-component>
         </b-col>
       </b-row>
       <!-- Конец блока с настройкой оповещений -->
@@ -115,6 +120,7 @@ export default {
   },
   data() {
     return {
+      show: false,
       selected: null,
       data: {
         email: "",
@@ -148,6 +154,9 @@ export default {
           break;
       }
     }, // метод для изменения способа оповещения пользователя
+    applyAllChanges() {
+      this.show = "5";
+    },
   },
 };
 </script>
@@ -155,5 +164,11 @@ export default {
 <style scoped>
 .border-bottom {
   border-bottom: 1px solid grey;
+}
+
+.custom-alert {
+  position: fixed;
+  top: 0;
+  left: 45%;
 }
 </style>
